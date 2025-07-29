@@ -1,6 +1,11 @@
 name = "class-schedule-app"
 compatibility_date = "2025-07-29"
 
-# Static site hosting configuration
+# Static site hosting configuration for SPA
 [assets]
 directory = "./dist"
+
+# SPA routing configuration
+[[routes]]
+pattern = "/*"
+file = "/index.html"
