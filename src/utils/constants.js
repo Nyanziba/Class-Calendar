@@ -30,7 +30,7 @@ export const PERIOD_TIMES = (() => {
     currentTime = new Date(endTime.getTime() + SCHEDULE_CONFIG.BREAK_DURATION * 60000);
     
     // 3限の後は昼休憩
-    if (period === 3) {
+    if (period === 2) {
       currentTime = new Date(`2000-01-01 ${SCHEDULE_CONFIG.LUNCH_BREAK.end}`);
     }
   }

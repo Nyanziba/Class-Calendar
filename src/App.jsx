@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import ClassForm from './components/ClassForm'
 import ScheduleTable from './components/ScheduleTable'
+import ICSExporter from './components/ICSExporter'
+import ImageExporter from './components/ImageExporter'
 import logger from './utils/logger'
 import './App.css'
 
 function App() {
   const [classes, setClasses] = useState([])
   const [editingClass, setEditingClass] = useState(null)
+  const scheduleRef = useRef(null) // 時間割表の参照用
 
   // LocalStorageからデータを読み込み
   useEffect(() => {
@@ -114,6 +117,8 @@ function App() {
           <button onClick={handleDebugInfo} className="btn-debug">
             📊 デバッグ情報
           </button>
+          <ICSExporter classes={classes} />
+          <ImageExporter classes={classes} scheduleRef={scheduleRef} />
           {classes.length > 0 && (
             <button onClick={handleClearAllClasses} className="btn-danger">
               🗑️ 全削除
@@ -133,6 +138,7 @@ function App() {
 
         <section className="schedule-section">
           <ScheduleTable
+            ref={scheduleRef}
             classes={classes}
             onEditClass={handleEditClass}
             onDeleteClass={handleDeleteClass}

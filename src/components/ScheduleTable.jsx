@@ -1,7 +1,8 @@
+import { forwardRef } from 'react';
 import { SCHEDULE_CONFIG, PERIOD_TIMES } from '../utils/constants';
 import logger from '../utils/logger';
 
-const ScheduleTable = ({ classes, onEditClass, onDeleteClass }) => {
+const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) => {
   // 時間割のマトリックスを作成
   const createScheduleMatrix = () => {
     const matrix = {};
@@ -83,7 +84,7 @@ const ScheduleTable = ({ classes, onEditClass, onDeleteClass }) => {
   };
 
   return (
-    <div className="schedule-table-container">
+    <div ref={ref} className="schedule-table-container">
       <h2>時間割</h2>
       <div className="table-wrapper">
         <table className="schedule-table">
@@ -134,6 +135,8 @@ const ScheduleTable = ({ classes, onEditClass, onDeleteClass }) => {
       )}
     </div>
   );
-};
+});
+
+ScheduleTable.displayName = 'ScheduleTable';
 
 export default ScheduleTable; 

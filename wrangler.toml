@@ -1,0 +1,6 @@
+name = "class-schedule-app"
+compatibility_date = "2025-07-29"
+
+# Static site hosting configuration
+[assets]
+directory = "./dist"
