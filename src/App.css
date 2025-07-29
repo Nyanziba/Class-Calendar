@@ -1,0 +1,450 @@
+/* リセットとベーススタイル */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f7fa;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ヘッダー */
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.app-header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* メインコンテンツ */
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-section {
+  margin-bottom: 3rem;
+}
+
+.schedule-section {
+  margin-bottom: 2rem;
+}
+
+/* フォームスタイル */
+.class-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e1e8ed;
+}
+
+.class-form h3 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input.error,
+.form-group select.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* ボタンスタイル */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.btn-debug {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-debug:hover {
+  opacity: 0.9;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+/* 時間割テーブル */
+.schedule-table-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #e1e8ed;
+}
+
+.schedule-table-container h2 {
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.schedule-table th,
+.schedule-table td {
+  border: 1px solid #dee2e6;
+  text-align: center;
+  vertical-align: top;
+}
+
+.schedule-table th {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 1rem 0.5rem;
+  font-weight: 600;
+  color: #495057;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.period-header {
+  min-width: 100px;
+}
+
+.day-header {
+  min-width: 150px;
+}
+
+.period-cell {
+  background: #f8f9fa;
+  padding: 0.75rem 0.5rem;
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.period-number {
+  font-weight: 600;
+  color: #495057;
+}
+
+.period-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.schedule-cell {
+  min-height: 120px;
+  padding: 0.5rem;
+  position: relative;
+}
+
+.schedule-cell.empty {
+  background: #fafbfc;
+}
+
+.schedule-cell.filled {
+  background: #fff;
+}
+
+.empty-text {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+.class-item {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.class-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.class-item:last-child {
+  margin-bottom: 0;
+}
+
+.class-name {
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.class-teacher {
+  font-size: 0.8rem;
+  color: #424242;
+  margin-bottom: 0.25rem;
+}
+
+.class-room {
+  font-size: 0.8rem;
+  color: #757575;
+  margin-bottom: 0.5rem;
+}
+
+.class-actions {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.btn-edit,
+.btn-delete {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-edit:hover {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.btn-delete:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.class-separator {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0.5rem 0;
+}
+
+/* 空の時間割メッセージ */
+.empty-schedule {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.empty-schedule p {
+  margin-bottom: 0.5rem;
+}
+
+/* 時間割サマリー */
+.schedule-summary {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #e8f5e8;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* フッター */
+.app-footer {
+  background: #2c3e50;
+  color: #ecf0f1;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .app-main {
+    padding: 1rem;
+  }
+  
+  .app-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header-actions {
+    justify-content: center;
+  }
+  
+  .class-form,
+  .schedule-table-container {
+    padding: 1rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .schedule-table {
+    font-size: 0.8rem;
+  }
+  
+  .period-cell,
+  .schedule-cell {
+    min-height: 80px;
+    padding: 0.25rem;
+  }
+  
+  .class-item {
+    padding: 0.5rem;
+  }
+  
+  .class-name {
+    font-size: 0.8rem;
+  }
+  
+  .class-teacher,
+  .class-room {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .table-wrapper {
+    margin: 0 -1rem;
+  }
+  
+  .schedule-table {
+    font-size: 0.7rem;
+  }
+  
+  .day-header,
+  .period-header {
+    min-width: 80px;
+  }
+}
