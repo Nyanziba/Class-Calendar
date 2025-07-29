@@ -1,3 +1,4 @@
-/assets/* /assets/:splat 200
-/vite.svg /vite.svg 200
-/ /index.html 200
+# Handle SPA routing - catch all routes except files with extensions
+/api/* 404
+/:file.:extension 200
+/* /index.html 200
