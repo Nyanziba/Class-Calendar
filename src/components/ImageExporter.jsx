@@ -21,7 +21,7 @@ const ImageExporter = ({ classes, scheduleRef }) => {
     if (!scheduleRef?.current || classes.length === 0) return;
     
     try {
-      const preview = await generatePreview(scheduleRef.current, options.size);
+      const preview = await generatePreview(scheduleRef.current, options.size, options.backgroundColor);
       setPreviewUrl(preview);
     } catch (error) {
       logger.error('プレビュー生成エラー', error);
