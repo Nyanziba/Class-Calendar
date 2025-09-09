@@ -236,11 +236,23 @@ body {
   min-width: 150px;
 }
 
+.day-header.is-today {
+  background: linear-gradient(135deg, #e6f0ff 0%, #f2f7ff 100%);
+  box-shadow: inset 0 -2px 0 #5b9cff;
+}
+
 .period-cell {
   background: #f8f9fa;
   padding: 0.75rem 0.5rem;
   font-weight: 500;
   min-width: 100px;
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 2; /* ヘッダーより低く、セルより高く */
+  box-shadow: 2px 0 0 rgba(0,0,0,0.02);
 }
 
 .period-number {
@@ -268,14 +280,23 @@ body {
   background: #fff;
 }
 
+.schedule-cell.is-today {
+  background: #fcfdff;
+}
+
+.schedule-cell.is-current {
+  outline: 2px solid #5b9cff;
+  outline-offset: -2px;
+}
+
 .empty-text {
   color: #adb5bd;
   font-style: italic;
 }
 
 .class-item {
-  background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
-  border: 1px solid #bbdefb;
+  background: #eef6ff;
+  border: 1px solid #cfe3ff;
   border-radius: 8px;
   padding: 0.75rem;
   margin-bottom: 0.5rem;
@@ -294,7 +315,7 @@ body {
 
 .class-name {
   font-weight: 600;
-  color: #1976d2;
+  color: #124a8c;
   margin-bottom: 0.25rem;
   font-size: 0.9rem;
 }
@@ -340,6 +361,38 @@ body {
   border: none;
   border-top: 1px solid #e0e0e0;
   margin: 0.5rem 0;
+}
+
+/* 昼休み行 */
+.lunch-row td {
+  background: #fff8e1;
+  color: #8d6e63;
+  text-align: center;
+  font-weight: 600;
+  padding: 0.5rem;
+}
+
+/* 凡例 */
+.schedule-summary .legend {
+  margin-left: 0.5rem;
+  font-weight: normal;
+  color: #555;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 4px;
+}
+
+.legend-dot.today {
+  background: #5b9cff;
+}
+
+.legend-dot.current {
+  background: #ff7043;
 }
 
 /* 空の時間割メッセージ */
@@ -427,6 +480,10 @@ body {
   .class-teacher,
   .class-room {
     font-size: 0.7rem;
+  }
+
+  .sticky-col {
+    left: 0;
   }
 }
 

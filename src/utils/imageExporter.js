@@ -5,25 +5,6 @@ import logger from './logger';
  * HTML要素を画像として保存するためのユーティリティ
  */
 
-/**
- * 背景色に応じて適切な文字色を決定
- * @param {String} backgroundColor - 背景色（16進数）
- * @returns {String} 適切な文字色
- */
-const getTextColor = (backgroundColor) => {
-  // 16進数カラーからRGB値を取得
-  const hex = backgroundColor.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-  
-  // 輝度を計算（WCAG 2.0の基準）
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  
-  // 輝度が0.5以上の場合は黒、それ以下の場合は白
-  return luminance > 0.5 ? '#333333' : '#ffffff';
-};
-
 // 画像サイズの定義
 export const IMAGE_SIZES = {
   PHONE_WALLPAPER: {
@@ -195,11 +176,8 @@ const addTitle = (ctx, canvasWidth, contentY, backgroundColor) => {
     day: 'numeric' 
   });
   
-  // 背景色に応じて文字色を決定
-  const textColor = getTextColor(backgroundColor);
-  
   // タイトルのスタイル
-  ctx.fillStyle = textColor;
+  ctx.fillStyle = backgroundColor === '#ffffff' ? '#333333' : '#ffffff';
   ctx.textAlign = 'center';
   ctx.font = 'bold 48px "Hiragino Sans", "ヒラギノ角ゴシック", "Yu Gothic", "游ゴシック", sans-serif';
   
@@ -235,12 +213,11 @@ const downloadCanvasAsImage = (canvas, filename, format, quality) => {
  * プレビュー用の小さなキャンバスを生成
  * @param {HTMLElement} element - キャプチャする要素
  * @param {Object} size - 目標サイズ
- * @param {String} backgroundColor - 背景色（デフォルト: '#ffffff'）
  */
-export const generatePreview = async (element, size, backgroundColor = '#ffffff') => {
+export const generatePreview = async (element, size) => {
   try {
     const canvas = await html2canvas(element, {
-      backgroundColor: backgroundColor,
+      backgroundColor: '#ffffff',
       scale: 0.5, // プレビュー用に低解像度
       useCORS: true,
       removeContainer: true,
@@ -261,7 +238,7 @@ export const generatePreview = async (element, size, backgroundColor = '#ffffff'
     previewCanvas.width = previewWidth;
     previewCanvas.height = previewHeight;
     
-    ctx.fillStyle = backgroundColor;
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, previewWidth, previewHeight);
     
     const scale = Math.min(previewWidth / canvas.width, previewHeight / canvas.height);

@@ -1,8 +1,55 @@
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { SCHEDULE_CONFIG, PERIOD_TIMES } from '../utils/constants';
 import logger from '../utils/logger';
 
 const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) => {
+  // 今日・現在時刻の情報を計算
+  const getTodayLabel = () => {
+    const map = ['日', '月', '火', '水', '木', '金', '土'];
+    return map[new Date().getDay()];
+  };
+
+  const parseHm = (hm) => {
+    const [h, m] = hm.split(':').map(Number);
+    return h * 60 + m;
+  };
+
+  const nowMinutes = () => {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  };
+
+  const isNowBetween = (start, end) => {
+    const n = nowMinutes();
+    return n >= parseHm(start) && n < parseHm(end);
+  };
+
+  const isCurrentSlot = (day, period) => {
+    try {
+      const today = getTodayLabel();
+      if (day !== today) return false;
+      const timeInfo = PERIOD_TIMES[period];
+      if (!timeInfo) return false;
+      return isNowBetween(timeInfo.start, timeInfo.end);
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const getClassColors = (name = '') => {
+    // 名前から安定した色を生成（HSL）
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+    }
+    const hue = hash % 360;
+    return {
+      backgroundColor: `hsl(${hue}, 85%, 95%)`,
+      borderColor: `hsl(${hue}, 65%, 75%)`,
+      color: `hsl(${hue}, 50%, 25%)`
+    };
+  };
+
   // 時間割のマトリックスを作成
   const createScheduleMatrix = () => {
     const matrix = {};
@@ -26,7 +73,8 @@ const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) 
     return matrix;
   };
 
-  const scheduleMatrix = createScheduleMatrix();
+  const scheduleMatrix = useMemo(() => createScheduleMatrix(), [classes]);
+  const todayLabel = getTodayLabel();
 
   const handleEdit = (classItem) => {
     logger.info('授業の編集を開始します', classItem);
@@ -40,19 +88,34 @@ const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) 
 
   const renderClassCell = (day, period) => {
     const classesInSlot = scheduleMatrix[day][period];
+    const isToday = day === todayLabel;
+    const isCurrent = isCurrentSlot(day, period);
     
     if (classesInSlot.length === 0) {
       return (
-        <td key={`${day}-${period}`} className="schedule-cell empty">
+        <td
+          key={`${day}-${period}`}
+          className={`schedule-cell empty ${isToday ? 'is-today' : ''} ${isCurrent ? 'is-current' : ''}`}
+          aria-label={`${day}曜日 ${period}限 空き`}
+        >
           <span className="empty-text">-</span>
         </td>
       );
     }
 
     return (
-      <td key={`${day}-${period}`} className="schedule-cell filled">
+      <td
+        key={`${day}-${period}`}
+        className={`schedule-cell filled ${isToday ? 'is-today' : ''} ${isCurrent ? 'is-current' : ''}`}
+        aria-label={`${day}曜日 ${period}限`}
+      >
         {classesInSlot.map((classItem, index) => (
-          <div key={classItem.id} className="class-item">
+          <div
+            key={classItem.id}
+            className="class-item"
+            style={getClassColors(classItem.name)}
+            title={`${classItem.name}${classItem.teacher ? ` - ${classItem.teacher}` : ''}${classItem.room ? ` @${classItem.room}` : ''}`}
+          >
             <div className="class-name">{classItem.name}</div>
             {classItem.teacher && (
               <div className="class-teacher">{classItem.teacher}</div>
@@ -90,22 +153,25 @@ const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) 
         <table className="schedule-table">
           <thead>
             <tr>
-              <th className="period-header">時限</th>
+              <th className="period-header sticky-col">時限</th>
               {SCHEDULE_CONFIG.DAYS.map(day => (
-                <th key={day} className="day-header">
+                <th
+                  key={day}
+                  className={`day-header ${day === todayLabel ? 'is-today' : ''}`}
+                  aria-label={`${day}曜日${day === todayLabel ? '（本日）' : ''}`}
+                >
                   {day}曜日
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: SCHEDULE_CONFIG.PERIODS }, (_, i) => {
-              const period = i + 1;
+            {Array.from({ length: SCHEDULE_CONFIG.PERIODS }, (_, i) => i + 1).flatMap(period => {
               const timeInfo = PERIOD_TIMES[period];
-              
-              return (
-                <tr key={period} className="period-row">
-                  <td className="period-cell">
+              const rowIsCurrent = isCurrentSlot(todayLabel, period);
+              const row = (
+                <tr key={`p-${period}`} className={`period-row ${rowIsCurrent ? 'is-current' : ''}`}>
+                  <td className="period-cell sticky-col" aria-label={`${period}限 ${timeInfo.start}～${timeInfo.end}`}>
                     <div className="period-number">{period}限</div>
                     <div className="period-time">
                       {timeInfo.start}～{timeInfo.end}
@@ -116,6 +182,14 @@ const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) 
                   )}
                 </tr>
               );
+              const lunch = period === 2 ? (
+                <tr key="lunch" className="lunch-row">
+                  <td colSpan={SCHEDULE_CONFIG.DAYS.length + 1}>
+                    昼休み（{SCHEDULE_CONFIG.LUNCH_BREAK.start}～{SCHEDULE_CONFIG.LUNCH_BREAK.end}）
+                  </td>
+                </tr>
+              ) : null;
+              return lunch ? [row, lunch] : [row];
             })}
           </tbody>
         </table>
@@ -130,7 +204,10 @@ const ScheduleTable = forwardRef(({ classes, onEditClass, onDeleteClass }, ref) 
       
       {classes.length > 0 && (
         <div className="schedule-summary">
-          <p>合計 {classes.length} 個の授業が登録されています。</p>
+          <p>
+            合計 {classes.length} 個の授業が登録されています。
+            <span className="legend"><span className="legend-dot today" /> 今日 / <span className="legend-dot current" /> 現在時限</span>
+          </p>
         </div>
       )}
     </div>
